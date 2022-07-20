@@ -1,0 +1,293 @@
+#include<windows.h>
+#include <iostream>
+#include <graphics.h>
+#include <cmath>
+
+using namespace std;
+
+void menu_lineas();
+void menu_circunferencia();
+void menu_elipses();
+void menu_parabolas();
+void menu_poligonos();
+void linea_dda_main();
+void linea_dda_algoritmo();
+void pixelcolor();
+
+int main(){
+    setlocale(LC_ALL, "spanish");
+    int opc;
+    cout << "Bienvenido a mi Proyecto de GPC\n" << endl;
+    do{
+
+       cout << "Que deseas dibujar?\n\n" //Menu principal
+            "1. lineas\n"
+            "2. Circunferencia\n"
+            "3. Elipses\n"
+            "4. Parábolas\n"
+            "5. Polígos\n"
+            "6. Salir\n"
+            "Opción: ";
+        cin>> opc;
+        if(cin.fail()){
+            cout << "Opción invalida\n" << endl;
+            cin.clear();
+            cin.ignore(100, '\n');
+        }
+        else{
+            switch(opc){
+
+             case 1:
+                cout<<"---Lineas---"<<endl;
+                menu_lineas();
+                break;
+
+             case 2:
+                cout<<"---Circunferencias---"<<endl;
+                menu_circunferencia();
+                break;
+
+             case 3:
+                cout<<"---Elipses---"<<endl;
+                menu_elipses();
+                break;
+
+             case 4:
+                cout<<"---Parábolas---"<<endl;
+                menu_parabolas();
+                break;
+
+             case 5:
+                cout<<"---Polígonos---"<<endl;
+                menu_poligonos();
+                break;
+
+             default:
+                cout<<"---Cerrando Sistema---"<<endl;
+                break;
+            }
+
+        }
+
+
+    } while(opc != 6);
+
+
+    return 0;
+}
+
+
+
+void menu_lineas(){
+    int opc;
+
+    do{
+        cout << "Que algoritmo deseas usar?\n"
+            "1. DDA\n"
+            "2. Bressenham\n"
+            "3. Salir\n"
+            "Opción: ";
+        cin>> opc;
+
+        if(cin.fail()){
+            cout << "Opción inválida\n" << endl;
+            cin.clear();
+            cin.ignore(100, '\n');
+        }
+            else{
+
+                switch(opc){
+                    case 1:
+                        cout<<"--DDA--"<<endl;
+                        linea_dda_algoritmo();
+                        break;
+
+                    case 2:
+                        cout<<"--Bressenham--"<<endl;
+                        //linea_bress.main();
+                        break;
+
+                    default: cout << "Opción iinválida.\n" << endl;
+                    break;
+                }
+            }
+
+
+    }while(opc !=3);
+
+}
+void menu_circunferencia(){
+    int opc;
+
+    do{
+        cout << "Que algoritmo deseas usar?\n"
+            "1. DDA/Básica\n"
+            "2. Punto Medio/Bressenham\n"
+            "3. Regresar al menu anterior\n"
+            "Opción: ";
+        cin>> opc;
+
+            if(cin.fail()){
+                cout << "Opción inválida.\n" << endl;
+                cin.clear();
+                cin.ignore(100, '\n');
+        }
+            else{
+
+                switch(opc){
+                    case 1:
+                        cout<<"--DDA--"<<endl;
+                        //circulo_dda.main();
+
+                    case 2:
+                        cout<<"--Bressenham--"<<endl;
+                        //circulo_bress.main();
+
+                    default: cout << "Opción inválida.\n" << endl;
+                    break;
+                }
+            }
+
+    }while(opc != 3);
+
+}
+void menu_elipses(){
+
+}
+void menu_parabolas(){
+
+}
+void menu_poligonos(){
+
+}
+
+
+void linea_dda_algoritmo(){
+int x1,x2,y1,y2;
+float k,xinc,yinc,dx,dy;
+float m,x_ant,y_ant,x_sig,y_sig;
+bool flag;
+int i, y, gdriver = DETECT, gmode, errorcode;
+initgraph(&gdriver, &gmode, "");
+
+cout<<"Ingrese el valor de x1: ";
+cin>>x1;
+cout<<"Ingrese el valor de y1: ";
+cin>>y1;
+cout<<"Ingrese el valor de x2: ";
+cin>>x2;
+cout<<"Ingrese el valor de y2: ";
+cin>>y2;
+
+//Calcula dx y dy
+dx=x2-x1;
+dy=y2-y1;
+
+//Calcula los pasos necesarios para generar los pixeles
+xinc = dx/k;
+yinc = dy/k;
+
+m = dy/dx;
+
+//Calcula el incremento en x & y para cada paso
+if (abs(dx) >= abs(dy)) {
+        k = abs(dx);
+        dx < 0 ? flag = true : flag = false;
+    } else {
+        k = abs(dy);
+        dy < 0 ? flag = true : flag = false;
+    }
+
+if (m <= 1) {
+    cout << "\nPaso\tX\tY PRELI\t\tY\n";
+    cout << "\n-\t-\t-\t\t-\n";
+
+    y_ant = y1, x_ant = x1;
+
+    if (flag == false)
+            x_sig = x1 - 1;
+        else
+            x_sig = x1 + 1;
+
+        for (i = 0; i <= k; i++) {
+            if (i == 0) {
+                cout << i << "\t" << x1 << "\t" << y1 << "\t\t" << y1 << "\n";
+            } else {
+                y_ant = y_ant + m;
+                y = ceil(y_ant);
+
+                cout << i << "\t" << x_sig << "\t" << y_ant << "\t\t" << y
+                     << "\n";
+
+                if (flag == false)
+                    x_sig = x_sig + 1;
+                else
+                    x_sig = x_sig - 1;
+            }
+        }
+    } else {
+        cout << "\nPaso\tX ANTERIOR\tX\tY\n";
+
+        if (flag == false)
+            y_sig = y1 + 1;
+        else
+            y_sig = y1 - 1;
+
+        double x_ant = x1, y_ant = y1;
+
+        for (i = 0; i <= k; i++) {
+            if (i == 0) {
+                cout << i << "\t" << x1 << "\t" << x1 << "\t\t" << y1 << "\n";
+            } else {
+                if (flag == false)
+                    x_ant = x_ant + (1 / m);
+                else
+                    x_ant = x_ant - (1 / m);
+
+                int x = ceil(x_ant);
+                cout << i << "\t" << double(x_ant) << "\t" << x << "\t"
+                     << y_sig << "\n";
+
+                if (flag == false)
+                    x_sig = x_sig + 1;
+                else
+                    x_sig = x_sig - 1;
+            }
+        }
+    }
+    pixelcolor();
+
+}
+
+
+
+void pixelcolor(){
+
+int opc;
+cout<<"Escoja color para trazado de pixeles: \n" //Menú seleccion de colores
+"1. Rojo\n"
+"2. Verde\n"
+"3. Azul\n"
+"4. Amarillo\n"
+"5. Rosa\n"
+"6. Blanco\n";
+cout<<"Opcion: ";
+cin>>opc;
+
+if(opc == 1){
+    setcolor(RED);
+}else if(opc == 2){
+    setcolor(GREEN);
+}else if(opc == 3){
+    setcolor(BLUE);
+}else if(opc == 4){
+    setcolor(YELLOW);
+}else if(opc == 5){
+    setcolor(CYAN);
+}else if(opc == 6){
+    setcolor(WHITE);
+}else{
+    cout<<"Opcion invaida!";
+}
+
+}
