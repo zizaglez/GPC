@@ -2,6 +2,7 @@
 #include <iostream>
 #include <graphics.h>
 #include <cmath>
+#include<iomanip>
 
 using namespace std;
 
@@ -12,7 +13,6 @@ void menu_parabolas();
 void menu_poligonos();
 void linea_dda_main();
 void linea_dda_algoritmo();
-void pixelcolor();
 
 int main(){
     setlocale(LC_ALL, "spanish");
@@ -163,131 +163,150 @@ void menu_poligonos(){
 
 
 void linea_dda_algoritmo(){
-int x1,x2,y1,y2;
-float k,xinc,yinc,dx,dy;
-float m,x_ant,y_ant,x_sig,y_sig;
-bool flag;
-int i, y, gdriver = DETECT, gmode, errorcode;
-initgraph(&gdriver, &gmode, "");
+	float dx,dy, xpre, ypre;
+	int x1,x2,y1,y2,k, x, y;
+	float xinc,yinc,m,aux,aux1;
 
-cout<<"Ingrese el valor de x1: ";
-cin>>x1;
-cout<<"Ingrese el valor de y1: ";
-cin>>y1;
-cout<<"Ingrese el valor de x2: ";
-cin>>x2;
-cout<<"Ingrese el valor de y2: ";
-cin>>y2;
+	int i, gdriver = DETECT, gmode, errorcode;
+    initgraph(&gdriver, &gmode, "");
 
-//Calcula dx y dy
-dx=x2-x1;
-dy=y2-y1;
+    cout<<"Ingrese el valor de x1: ";
+    cin>>x1;
+    cout<<"Ingrese el valor de y1: ";
+    cin>>y1;
+    cout<<"Ingrese el valor de x2: ";
+    cin>>x2;
+    cout<<"Ingrese el valor de y2: ";
+    cin>>y2;
 
-//Calcula los pasos necesarios para generar los pixeles
-xinc = dx/k;
-yinc = dy/k;
+    //Constantes
+    dx = x2 - x1;
+    dy = y2 - y1;
 
-m = dy/dx;
-
-//Calcula el incremento en x & y para cada paso
-if (abs(dx) >= abs(dy)) {
-        k = abs(dx);
-        dx < 0 ? flag = true : flag = false;
-    } else {
-        k = abs(dy);
-        dy < 0 ? flag = true : flag = false;
+    if(dx < 0){
+        aux = dx * -1;
+    }
+    else{
+        aux = dx;
+        }
+    if(dy < 0){
+        aux1 = dy * -1;
+    }
+    else{
+        aux1 = dy;
+    }
+    if(aux >= aux1){
+        k = aux;
+    }
+    else {
+        k = aux1;
     }
 
-if (m <= 1) {
-    cout << "\nPaso\tX\tY PRELI\t\tY\n";
-    cout << "\n-\t-\t-\t\t-\n";
+    xinc = dx / k;
+    yinc = dy / k;
 
-    y_ant = y1, x_ant = x1;
+    m = dy / dx;
 
-    if (flag == false)
-            x_sig = x1 - 1;
-        else
-            x_sig = x1 + 1;
+    x = x1;
+    y = y1;
 
-        for (i = 0; i <= k; i++) {
-            if (i == 0) {
-                cout << i << "\t" << x1 << "\t" << y1 << "\t\t" << y1 << "\n";
-            } else {
-                y_ant = y_ant + m;
-                y = ceil(y_ant);
+    i=1;
 
-                cout << i << "\t" << x_sig << "\t" << y_ant << "\t\t" << y
-                     << "\n";
+    cout<<"\nDiferencial de X: "<<dx<<endl;
+    cout<<"\nDiferencial de Y: "<<dy<<endl;
+    cout<<"Pasos: "<<k<<endl;
+    cout<<"Pendiente: "<<fixed<<setprecision(2)<<m<<endl;
 
-                if (flag == false)
-                    x_sig = x_sig + 1;
-                else
-                    x_sig = x_sig - 1;
-            }
-        }
-    } else {
-        cout << "\nPaso\tX ANTERIOR\tX\tY\n";
-
-        if (flag == false)
-            y_sig = y1 + 1;
-        else
-            y_sig = y1 - 1;
-
-        double x_ant = x1, y_ant = y1;
-
-        for (i = 0; i <= k; i++) {
-            if (i == 0) {
-                cout << i << "\t" << x1 << "\t" << x1 << "\t\t" << y1 << "\n";
-            } else {
-                if (flag == false)
-                    x_ant = x_ant + (1 / m);
-                else
-                    x_ant = x_ant - (1 / m);
-
-                int x = ceil(x_ant);
-                cout << i << "\t" << double(x_ant) << "\t" << x << "\t"
-                     << y_sig << "\n";
-
-                if (flag == false)
-                    x_sig = x_sig + 1;
-                else
-                    x_sig = x_sig - 1;
-            }
+    if(m > 1){
+        cout<<"\nPaso\t\tXprel\t\t X\t\tYprel\t\t Y"<<endl;
+        cout<<" 0\t\t "<<fixed<<setprecision(2)<<x1<<"\t\t "<<lround(x)<<"\t\t "<<y1<<"\t\t "<<lround(y)<<endl;
+        for (i = 0; i <= k; i++){
+            xpre = x + xinc;
+            ypre = y + yinc;
+            cout<<" "<<i+1<<"\t\t "<<fixed<<setprecision(2)<<xpre<<"\t\t "<<lround(xpre)<<"\t\t "<<ypre<<"\t\t "<<lround(ypre)<<endl;
+            x = xpre;
+            y = ypre;
         }
     }
-    pixelcolor();
+    else{
+        cout<<"\nPaso\t\tXpreliminar\t\t X\t\tYpreliminar\t\t Y"<<endl;
+        cout<<" 0\t\t "<<fixed<<setprecision(2)<<x1<<"\t\t "<<lround(x)<<"\t\t "<<y1<<"\t\t "<<lround(y)<<endl;
+        for (i = 0; i <= k; i++){
+            xpre = x - xinc;
+            ypre = y - yinc;
+            cout<<" "<<i+1<<"\t\t "<<fixed<<setprecision(2)<<xpre<<"\t\t "<<lround(xpre)<<"\t\t "<<ypre<<"\t\t "<<lround(ypre)<<endl;
+            x = xpre;
+            y = ypre;
+        }
+    }
 
-}
+	int opc;
+    cout<<"Escoja el color para el trazado de pixeles: \n" //Menú seleccion de colores
+    "1. Rojo\n"
+    "2. Verde\n"
+    "3. Azul\n"
+    "4. Amarillo\n"
+    "5. Rosa\n"
+    "6. Blanco\n";
+    cout<<"Opcion: ";
+    cin>>opc;
 
-
-
-void pixelcolor(){
-
-int opc;
-cout<<"Escoja color para trazado de pixeles: \n" //Menú seleccion de colores
-"1. Rojo\n"
-"2. Verde\n"
-"3. Azul\n"
-"4. Amarillo\n"
-"5. Rosa\n"
-"6. Blanco\n";
-cout<<"Opcion: ";
-cin>>opc;
-
-if(opc == 1){
-    setcolor(RED);
-}else if(opc == 2){
-    setcolor(GREEN);
-}else if(opc == 3){
-    setcolor(BLUE);
-}else if(opc == 4){
-    setcolor(YELLOW);
-}else if(opc == 5){
-    setcolor(CYAN);
-}else if(opc == 6){
-    setcolor(WHITE);
-}else{
-    cout<<"Opcion invaida!";
-}
+	for (i = 0; i < k; i++){
+        if(opc == 1){
+            putpixel(x,y,4);
+            x=x+xinc;
+            cout<<"x";
+            y=y+yinc;
+            cout<<"y\n";
+            i=i+1;
+            delay(300);
+        }
+            if(opc == 2){
+            putpixel(x,y,2);
+            x=x+xinc;
+            cout<<"x";
+            y=y+yinc;
+            cout<<"y\n";
+            //i=i+1;
+            delay(300);
+        }
+          if(opc == 3){
+            putpixel(x,y,1);
+            x=x+xinc;
+            cout<<"x";
+            y=y+yinc;
+            cout<<"y\n";
+            i=i+1;
+            delay(300);
+        }
+        if(opc == 4){
+            putpixel(x,y,14);
+            x=x+xinc;
+            cout<<"x";
+            y=y+yinc;
+            cout<<"y\n";
+            i=i+1;
+            delay(300);
+        }
+        if(opc == 5){
+            putpixel(x,y,3);
+            x=x+xinc;
+            cout<<"x";
+            y=y+yinc;
+            cout<<"y\n";
+            i=i+1;
+            delay(300);
+        }
+        if(opc == 6){
+            putpixel(x,y,15);
+            x=x+xinc;
+            cout<<"x";
+            y=y+yinc;
+            cout<<"y\n";
+            i=i+1;
+            delay(300);
+        }
+	}
+	closegraph();
 
 }
