@@ -13,6 +13,9 @@ void menu_parabolas();
 void menu_poligonos();
 void linea_dda_main();
 void linea_dda_algoritmo();
+int sgn();
+void linea_bresenham_algoritmo();
+int signo(int num);
 
 int main(){
     setlocale(LC_ALL, "spanish");
@@ -104,7 +107,7 @@ void menu_lineas(){
 
                     case 2:
                         cout<<"--Bressenham--"<<endl;
-                        //linea_bress.main();
+                        linea_bresenham_algoritmo();
                         break;
 
                     default: cout << "Opción iinválida.\n" << endl;
@@ -161,14 +164,28 @@ void menu_poligonos(){
 
 }
 
+int sgn(float a){
+
+    if(a==0){
+
+        return 0;
+    }
+    if(a<0){
+
+        return -1;
+    }
+    else
+        return 1;
+
+}
+
 
 void linea_dda_algoritmo(){
-	float dx,dy, xpre, ypre;
-	int x1,x2,y1,y2,k, x, y;
-	float xinc,yinc,m,aux,aux1;
-
-	int i, gdriver = DETECT, gmode, errorcode;
+    float dy, dx, k;
+    float x1, x2, y1, y2;
+    int gdriver = DETECT, gmode, errorcode;
     initgraph(&gdriver, &gmode, "");
+
 
     cout<<"Ingrese el valor de x1: ";
     cin>>x1;
@@ -183,62 +200,29 @@ void linea_dda_algoritmo(){
     dx = x2 - x1;
     dy = y2 - y1;
 
-    if(dx < 0){
-        aux = dx * -1;
+    if(abs(dx) >= abs(dy)){
+        k = abs(dx);
     }
     else{
-        aux = dx;
-        }
-    if(dy < 0){
-        aux1 = dy * -1;
-    }
-    else{
-        aux1 = dy;
-    }
-    if(aux >= aux1){
-        k = aux;
-    }
-    else {
-        k = aux1;
+        k = abs(dy);
     }
 
-    xinc = dx / k;
-    yinc = dy / k;
+    float xinc, yinc;
 
-    m = dy / dx;
+    xinc = (x2 - x1)/k;
+    yinc = (y2 - y1)/k;
 
-    x = x1;
-    y = y1;
+    float x, y;
 
-    i=1;
+    x = x1 + 0.5 * sgn(xinc);
+    y = y1 + 0.5 * sgn(yinc);
 
-    cout<<"\nDiferencial de X: "<<dx<<endl;
+    int i = 0;
+
+    cout<<"\nDiferencial de X: "<<dx;
     cout<<"\nDiferencial de Y: "<<dy<<endl;
-    cout<<"Pasos: "<<k<<endl;
-    cout<<"Pendiente: "<<fixed<<setprecision(2)<<m<<endl;
+    cout<<"Pasos: "<<k<<endl<<endl;
 
-    if(m > 1){
-        cout<<"\nPaso\t\tXprel\t\t X\t\tYprel\t\t Y"<<endl;
-        cout<<" 0\t\t "<<fixed<<setprecision(2)<<x1<<"\t\t "<<lround(x)<<"\t\t "<<y1<<"\t\t "<<lround(y)<<endl;
-        for (i = 0; i <= k; i++){
-            xpre = x + xinc;
-            ypre = y + yinc;
-            cout<<" "<<i+1<<"\t\t "<<fixed<<setprecision(2)<<xpre<<"\t\t "<<lround(xpre)<<"\t\t "<<ypre<<"\t\t "<<lround(ypre)<<endl;
-            x = xpre;
-            y = ypre;
-        }
-    }
-    else{
-        cout<<"\nPaso\t\tXpreliminar\t\t X\t\tYpreliminar\t\t Y"<<endl;
-        cout<<" 0\t\t "<<fixed<<setprecision(2)<<x1<<"\t\t "<<lround(x)<<"\t\t "<<y1<<"\t\t "<<lround(y)<<endl;
-        for (i = 0; i <= k; i++){
-            xpre = x - xinc;
-            ypre = y - yinc;
-            cout<<" "<<i+1<<"\t\t "<<fixed<<setprecision(2)<<xpre<<"\t\t "<<lround(xpre)<<"\t\t "<<ypre<<"\t\t "<<lround(ypre)<<endl;
-            x = xpre;
-            y = ypre;
-        }
-    }
 
 	int opc;
     cout<<"Escoja el color para el trazado de pixeles: \n" //Menú seleccion de colores
@@ -251,62 +235,219 @@ void linea_dda_algoritmo(){
     cout<<"Opcion: ";
     cin>>opc;
 
-	for (i = 0; i < k; i++){
+	while (i <= k){
+            cout<<"x = "<< x <<", "<<"y = "<<y<<endl;
         if(opc == 1){
             putpixel(x,y,4);
-            x=x+xinc;
-            cout<<"x";
-            y=y+yinc;
-            cout<<"y\n";
-            i=i+1;
+            x+=xinc;
+            //cout<<"x";
+            y+=yinc;
+            //cout<<"y\n";
+            i++;
             delay(300);
         }
             if(opc == 2){
             putpixel(x,y,2);
             x=x+xinc;
-            cout<<"x";
+            //cout<<"x";
             y=y+yinc;
-            cout<<"y\n";
-            //i=i+1;
+            //cout<<"y\n";
+            i++;
             delay(300);
         }
           if(opc == 3){
             putpixel(x,y,1);
             x=x+xinc;
-            cout<<"x";
+            //cout<<"x";
             y=y+yinc;
-            cout<<"y\n";
-            i=i+1;
+            //cout<<"y\n";
+            i++;
             delay(300);
         }
         if(opc == 4){
             putpixel(x,y,14);
             x=x+xinc;
-            cout<<"x";
+            //cout<<"x";
             y=y+yinc;
-            cout<<"y\n";
-            i=i+1;
+            //cout<<"y\n";
+            i++;
             delay(300);
         }
         if(opc == 5){
             putpixel(x,y,3);
             x=x+xinc;
-            cout<<"x";
+            //cout<<"x";
             y=y+yinc;
-            cout<<"y\n";
-            i=i+1;
+            //cout<<"y\n";
+            i++;
             delay(300);
         }
         if(opc == 6){
             putpixel(x,y,15);
             x=x+xinc;
-            cout<<"x";
+            //cout<<"x";
             y=y+yinc;
-            cout<<"y\n";
-            i=i+1;
+            //cout<<"y\n";
+            i++;
             delay(300);
         }
 	}
 	closegraph();
+
+}
+
+void linea_bresenham_algoritmo(){
+    int s1,s2,intercambio,i,x,y;
+    float e,ax,ay,temp;
+    float x1, y1, x2, y2;
+
+
+    int gdriver = DETECT, gmode, errorcode;
+    initgraph(&gdriver, &gmode, "");
+    cout<<"Ingrese el valor de x1: ";
+    cin>>x1;
+    cout<<"Ingrese el valor de y1: ";
+    cin>>y1;
+    cout<<"Ingrese el valor de x2: ";
+    cin>>x2;
+    cout<<"Ingrese el valor de y2: ";
+    cin>>y2;
+
+    //Claculo de constantes
+    x=x1;
+    y=y1;
+
+    ax=abs(x2-x1);
+    ay=abs(y2-y1);
+
+    s1=signo(x2-x1);
+    s2=signo(y2-y1);
+
+    if(ay>ax){
+      temp=ax;
+      ax=ay;
+      ay=temp;
+      intercambio=1;
+   }
+    else{
+       intercambio=0;
+   }
+
+    e=2*ay-ax;
+
+    for(i=1;i<=ax;i++){
+      //putpixel((319+x),(239-y),4);
+      if(e>=0){
+         if (intercambio==1){
+             x=x+s1;
+         }
+         else{
+             y=y+s2;
+         }
+            e=e-(2*ax);
+      }
+
+      if (intercambio==1){
+          y=y+s2;
+      }
+      else{
+          x=x+s1;
+      }
+      e=e+2*ay;
+   }
+
+    cout<<"\nX: "<<x;
+    cout<<"\nY: "<<y<<endl;
+    //cout<<"Pasos: "<<k<<endl<<endl;
+
+    int opc;
+    cout<<"Escoja el color para el trazado de pixeles: \n" //Menú seleccion de colores
+    "1. Rojo\n"
+    "2. Verde\n"
+    "3. Azul\n"
+    "4. Amarillo\n"
+    "5. Rosa\n"
+    "6. Blanco\n";
+    cout<<"Opcion: ";
+    cin>>opc;
+
+    for (i=1;i<=ax;i++){
+        cout<<"x = "<< x <<", "<<"y = "<<y<<endl;
+        if(opc == 1){
+            putpixel(x,y,4);
+            x=x+s1;
+            //cout<<"x";
+            y=y+s2;
+            //cout<<"y\n";
+            i++;
+            delay(300);
+        }
+            if(opc == 2){
+            putpixel(x,y,2);
+            x=x+s1;
+            //cout<<"x";
+            y=y+s2;
+            //cout<<"y\n";
+            i++;
+            delay(300);
+        }
+            if(opc == 3){
+            putpixel(x,y,1);
+            x=x+s1;
+            //cout<<"x";
+            y=y+s2;
+            //cout<<"y\n";
+            i++;
+            delay(300);
+        }
+            if(opc == 4){
+            putpixel(x,y,14);
+            x=x+s1;
+            //cout<<"x";
+            y=y+s2;
+            //cout<<"y\n";
+            i++;
+            delay(300);
+        }
+          if(opc == 5){
+            putpixel(x,y,3);
+            x=x+s1;
+            //cout<<"x";
+            y=y+s2;
+            //cout<<"y\n";
+            i++;
+            delay(300);
+        }
+         if(opc == 6){
+            putpixel(x,y,15);
+            x=x+s1;
+            //cout<<"x";
+            y=y+s2;
+            //cout<<"y\n";
+            i++;
+            delay(300);
+        }
+    }
+	closegraph();
+
+}
+
+int signo(int num){
+
+    int resultado;
+
+    if(num<0)
+
+       resultado=-1;
+
+   if(num>0)
+
+       resultado=1;
+
+   if(num==0)
+
+       resultado=0;
+
+   return(resultado);
 
 }
